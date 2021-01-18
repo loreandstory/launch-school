@@ -9,6 +9,7 @@ name = nil
 loan_amount = nil
 apr = nil
 loan_duration = nil
+continue = nil
 
 ###########################################################
 #         Load messages and define functions              #
@@ -39,7 +40,7 @@ end
 def calculate_loan_data(amount, apr, duration)
   # note that all input are strings, which will be converted below...
   monthly_rate = (apr.to_f / 12) / 100
-  duration_in_months = duration.to_i / 12
+  duration_in_months = duration.to_i * 12
 
   monthly_payment =
     amount.split(',').join('').to_i * (
@@ -47,7 +48,6 @@ def calculate_loan_data(amount, apr, duration)
                (1 - (1 + monthly_rate)**(-duration_in_months))
              )
 
-  binding.pry
 
   loan_details = {
     rate_mnth: monthly_rate,
@@ -55,9 +55,12 @@ def calculate_loan_data(amount, apr, duration)
     payment_mnth: monthly_payment
   }
   print <<-LOAN_INFO
-    Interest rate per month: #{loan_details['rate_mnth']} 
-    Loan duration (months): #{loan_details['duration_mnth']} 
-    Payment per month: #{loan_details['duration_mnth']} 
+
+    [[ Loan Summary ]]
+    Interest rate per month: #{loan_details[:rate_mnth] * 100}%
+    Loan duration (months): #{loan_details[:duration_mnth]} 
+    Payment per month: #{loan_details[:payment_mnth]} 
+
   LOAN_INFO
 
   loan_details
@@ -67,34 +70,51 @@ end
 ###########################################################
 #      Request loan info and calculate desired data       #
 ###########################################################
-loop do  # Request name
-  name = prompt(MESSAGES['welcome'])
-  if valid_name?(name)
-    puts "Hi #{name}! Let's get started.\n\n"
+loop do
+  loop do  # Request name
+    name = prompt(MESSAGES['welcome'])
+    if valid_name?(name)
+      puts "Hi #{name}! Let's get started.\n\n"
+      break
+    else
+      puts(MESSAGES['error_name'])
+    end
+  end
+
+  loop do  # Request loan amount
+    loan_amount = prompt(MESSAGES['request_loan_amount'])
+    break if valid_amount?(loan_amount)
+    puts(MESSAGES['error_loan_amount'])
+  end
+
+  loop do  # Request Annual Percentage Rate (APR)
+    apr = prompt(MESSAGES['request_apr'])
+    break if valid_apr?(apr)
+    puts(MESSAGES['error_apr'])
+  end
+
+  loop do  # Request loan duration in years
+    loan_duration = prompt(MESSAGES['request_loan_duration'])
+    break if valid_duration?(loan_duration)
+    puts(MESSAGES['error_loan_duration'])
+  end
+
+
+
+  calculate_loan_data(loan_amount, apr, loan_duration)
+  puts("Thank you for using mortgage calculator!")
+
+  loop do
+    continue = prompt(MESSAGES['request_continue'])
+    
+    break if /^n$/i =~ continue || /^y$/i =~ continue
+    puts(MESSAGES['error_continue'])
+  end
+
+  
+  if /^n$/i =~ continue
     break
-  else
-    puts(MESSAGES['error_name'])
+  elsif /^n$/i =~ continue
+    next
   end
 end
-
-loop do  # Request loan amount
-  loan_amount = prompt(MESSAGES['request_loan_amount'])
-  break if valid_amount?(loan_amount)
-  puts(MESSAGES['error_loan_amount'])
-end
-
-loop do  # Request Annual Percentage Rate (APR)
-  apr = prompt(MESSAGES['request_apr'])
-  break if valid_apr?(apr)
-  puts(MESSAGES['error_apr'])
-end
-
-loop do  # Request loan duration in years
-  loan_duration = prompt(MESSAGES['request_loan_duration'])
-  break if valid_duration?(loan_duration)
-  puts(MESSAGES['error_loan_duration'])
-end
-
-
-
-calculate_loan_data(loan_amount, apr, loan_duration)
