@@ -67,7 +67,7 @@ def get_game_selection
     print_error("Game not available. Please enter a valid game name...")
   end
 
-  return game
+  game
 end
 
 def translate_user_choice(chosen_game, user_choice)
@@ -85,7 +85,7 @@ def valid_user_choice?(chosen_game, user_choice)
     RPS_SHORTHAND_OPTIONS.include?(user_choice)
 
   when 'lsp'
-    LSPOCK_SHORTHAND_OPTIONS.include?(user_choice) 
+    LSPOCK_SHORTHAND_OPTIONS.include?(user_choice)
 
   end
 end
@@ -102,20 +102,19 @@ def get_user_choice(chosen_game)
 
     prompt("Enter your choice: ")
     choice = gets.chomp
-    
+
     break if valid_user_choice?(chosen_game, choice)
   end
 
-  return choice
+  choice
 end
 
 def get_bot_choice(chosen_game)
-  bot_choice = nil
   case chosen_game
   when 'rps'
-    bot_choice = RPS_OPTIONS.sample
+    RPS_OPTIONS.sample
   when 'lsp'
-    bot_choice = LSPOCK_OPTIONS.sample
+    LSPOCK_OPTIONS.sample
   end
 end
 
@@ -145,7 +144,6 @@ def play_rps(
     loses: past_results[:loses]
   }
 end
-
 
 def play_lsp(
   user_name,
@@ -207,31 +205,30 @@ loop do
   bot_rps_choice = get_bot_choice(game_choice)
 
   results = case game_choice
-              when 'rps'
-                play_rps(
-                  user_name,
-                  user_rps_choice,
-                  bot_rps_choice,
-                  results
-                )
-              when 'lsp'
-                play_lsp(
-                  user_name,
-                  user_rps_choice,
-                  bot_rps_choice,
-                  results
-                )
-              end
+            when 'rps'
+              play_rps(
+                user_name,
+                user_rps_choice,
+                bot_rps_choice,
+                results
+              )
+            when 'lsp'
+              play_lsp(
+                user_name,
+                user_rps_choice,
+                bot_rps_choice,
+                results
+              )
+            end
 
+  print_outcome_and_score(user_name, user_rps_choice, bot_rps_choice, results)
 
-    print_outcome_and_score(user_name, user_rps_choice, bot_rps_choice, results)
+  if game_over?(results)
+    puts "Game Over! Whoever has scored more than 5 won!"
+    break
+  end
 
-    if game_over?(results)
-      puts "Game Over! Whoever has scored more than 5 won!"
-      break
-    end
-
-    break unless continue_playing?
+  break unless continue_playing?
 end
 
-  puts "\nThanks for playing and hope to see you again soon!\n\n"
+puts "\nThanks for playing and hope to see you again soon!\n\n"
