@@ -4,4 +4,6 @@ Code and other bits written while going through LS RB101 Programming Foundations
 - [x] Lesson 1: Preparations - 01/05/2021
 - [ ] Lesson 2: Small Programs - in progress
       - [x] Wrote calculator.rb.
-      - [ ] martgage_calc.rb in progress.
+      - [x] Wrote martgage_calc.rb and message file for it.
+      - [x] Wrote rock_paper_scissors.rb, edited, extended, added all features and more for bonus. Also can play lizard-spock.
+      - [ ] On to next section...
