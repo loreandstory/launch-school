@@ -16,5 +16,4 @@ printf "\`\`\`" >> log.txt
 
 # Copy log.txt to clipboard and remove log.txt file
 xclip -sel clip < log.txt
-rm log.txt output.txt output_trimb.txt output_trimmed.txt
-
+rm log.txt output.txt output_trimb.txt output_trimmed.txt typescript
