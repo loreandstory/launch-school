@@ -1,0 +1,90 @@
+constants:
+  - &rps_title "___  ___  ___ _  _    ___   _   ___  ___  ___     ___  ___  ___  ___  ___  ___  ___  ___\n|__| |  | |   |_/     |__| /_\\  |__| |__  |__|    |__  |     |   |__  |__  |  | |__| |__\n|  \\ |__| |__ | \\_    |   /   \\ |    |__  |  \\    __|  |__  _|_  __|  __|  |__| |  \\ __|\n\n"
+
+  - &ls_title ",   ___ ___   _   ___   ___    ___ ___  ___  ___ _  _\n|    |  __|  /_\\  |__|  |  \\   |__ |__| |  | |   |_/ \n|__ _|_ |__ /   \\ |  \\  |__/   __| |    |__| |__ | \\_\n\n"
+
+  - &user_input "\n=> Your choice: "
+  - &just_enter "\n=> Press enter to continue: "
+  - &just_quite "(Input 'quite' to exit at any time.)\n\n"
+  - &enter_or_quite "\n=> Press 'enter' to play, input 'quite' to exit: "
+  - &exit_or_replay "\n=> Input 'quite' to exit or 'r' to replay: "
+  - &score
+      wins: "Wins: "
+      loses: " | Loses: "
+pages:
+  greeting:
+    title: *rps_title
+    contents:
+      - "Welcome to the game!"
+      - *enter_or_quite
+  choose_name:
+    title: *rps_title
+    contents:
+      - *just_quite
+      - "Enter your username (note that 'bot' is taken): "
+      - *just_enter
+  choose_game:
+    title: *rps_title
+    contents:
+      - *just_quite
+      - ", hello and welcome!"
+      - "Choose your game (enter code for game listed below): "
+      - "  > rps - Rock Paper Scissors"
+      - "  > ls  - Lizard Spock"
+      - *user_input
+  choose_rounds:
+    title: *rps_title
+    contents:
+      - *just_quite
+      - ", choose the number of rounds to play (enter code for rounds listed below): "
+      - "  > 1 -  2 / 3"
+      - "  > 2 -  3 / 5"
+      - "  > 3 -  7 / 10"
+      - *user_input
+  play_rps:
+    title: *rps_title
+    contents:
+      - *score
+      - *just_quite
+      - "Let's play!"
+      - "Choose your weapon (enter code for choice listed below): "
+      - "  > r - Rock"
+      - "  > p - Paper"
+      - "  > s - Scissors"
+      - *user_input
+  play_ls:
+    title: *ls_title
+    contents:
+      - *score
+      - *just_quite
+      - "Let's play!"
+      - "Choose your weapon (enter code for choice listed below): "
+      - "  > r - Rock"
+      - "  > p - Paper"
+      - "  > s - Scissors"
+      - "  > l - Lizard"
+      - "  > k - Spock"
+      - *user_input
+  round_results:
+    title:
+      rps: *rps_title
+      ls: *ls_title
+    contents:
+      - *just_quite
+      - 
+          winner: " won this round!"
+          user_choice: "You chose: "
+          bot_choice: "Bot chose: "
+      - *score
+      - *just_enter
+  continue:
+    title:
+      rps: *rps_title
+      ls: *ls_title
+    contents:
+      - 
+          winner: " won!"
+          user_choice: "Your final choice: "
+          bot_choice: "Bot's final choice: "
+      - *score
+      - *exit_or_replay
