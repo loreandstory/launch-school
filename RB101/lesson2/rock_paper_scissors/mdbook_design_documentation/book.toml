@@ -1,0 +1,6 @@
+[book]
+authors = ["loreandstory"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Design and Documentation"
