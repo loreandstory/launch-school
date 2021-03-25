@@ -8,4 +8,5 @@ Code and other bits written while going through LS RB101 Programming Foundations
       - [x] Wrote rock_paper_scissors.rb, edited, extended, added all features and more for bonus. Also can play lizard-spock.
       - [x] On to next section...
 - [x] Lesson 3: Practice Problems
-- [ ] Lesson 4: Ruby Collections
+- [x] Lesson 4: Ruby Collections
+- [ ] Lesson 5: Advanced Ruby Collections
