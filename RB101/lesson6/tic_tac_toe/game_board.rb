@@ -1,5 +1,16 @@
 require 'colorize'
 
+def color_positions(line)
+  while line =~ /[^m][XO]/
+    line.gsub!(/[OX]/, 'X' => 'X'.colorize(:red), 'O' => 'O'.colorize(:blue))
+  end
+
+  #while line =~ /[^m][1-9]/
+  #  line.gsub!(/([1-9])/, $1.colorize(:light_white))
+  #end
+  
+end
+
 def display_board(board_arr)
 
   # example board_arr
@@ -16,32 +27,14 @@ def display_board(board_arr)
                  false
                end
 
-  board_arr.each_with_index do |board_line, line_number|
-    #
-    # Board:
-    #   line 0:   |   |   
-    #   break1:-----------
-    #   line 1:   |   |   
-    #   break2:-----------
-    #   line 2:   |   |   
+  board_arr.each_with_index do |position, line_number|
 
-    pos = []
-    board_line.each do |entry|
-      if entry.class == String
-        pos << entry.colorize(:red) if entry == "X"
-        pos << entry.colorize(:blue) if entry == "O"
-      elsif entry.class == Integer
-        pos << entry.to_s.colorize(:light_white)
-      else
-        pos << " "
-      end
-    end
-
-    filled_line = " #{pos[0]} | #{pos[1]} | #{pos[2]} "
+    filled_line = " #{position[0]} | #{position[1]} | #{position[2]} "
     break_line = "-----------"
 
     if term_width
-      puts filled_line.center(term_width)
+      centered_line = filled_line.center(term_width)
+      puts color_positions(centered_line)
       puts break_line.center(term_width) if line_number < 2
     else
       puts filled_line
