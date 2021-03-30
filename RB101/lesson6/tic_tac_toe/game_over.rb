@@ -29,30 +29,31 @@ def won_vertically?(board_arr, piece)
 end
 
 def diagonals_only(array)
-  diagonals_arr = Array.new(2, [])
+  tl_to_br = []
 
   # diag tr->bl a[r][c] ==> r - c == 0
   array.each_with_index do |row, row_num|
     row.each_with_index do |val, col_num|
-      diagonals_arr[0] << val if row_num - col_num == 0
-      p diagonals_arr
+      tl_to_br << val if row_num - col_num == 0
     end  
   end  
+
+  tr_to_bl = []
 
   # diag tl->br a[r][c] ==> r + c == a.size - 1
   array.each_with_index do |row, row_num|
     row.each_with_index do |val, col_num|  
-      diagonals_arr[1] << val if row_num + col_num == array.size - 1    
-      p diagonals_arr
+      tr_to_bl << val if row_num + col_num == array.size - 1    
     end  
   end 
 
-  diagonals_arr
+  [tl_to_br, tr_to_bl]
 end
 
 def won_diagonally?(board_arr, piece)
+  diagonals_only = diagonals_only(board_arr)
   
-  board_arr.any? do |line|
+  diagonals_only.any? do |line|
     line.all? do |position|
       position == piece
     end
@@ -72,13 +73,15 @@ def winner?(game)
   p won_horizontally?(game[:board], game[:bot][:piece])
   p won_vertically?(game[:board], game[:player][:piece])
   p won_vertically?(game[:board], game[:bot][:piece])
+  p won_diagonally?(game[:board], game[:player][:piece])
+  p won_diagonally?(game[:board], game[:bot][:piece])
 end
 
 game = {
          board:  [
-                   ['X', 'X', 'O'],
-                   [4, 'X', 'O'],
-                   ['O', 'X', 'O']
+                   ['X', 'O', 'O'],
+                   [4, 'O', 'O'],
+                   ['O', 'X', 'X']
                  ],
 
          player: {
