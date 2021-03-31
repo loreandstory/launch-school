@@ -1,46 +1,51 @@
-require 'colorize'
+$LOAD_PATH << '.'
 
-def color_positions(line)
-  while line =~ /[^m][XO]/
-    line.gsub!(/[OX]/, 'X' => 'X'.colorize(:red), 'O' => 'O'.colorize(:blue))
+require 'play_order.rb'
+require 'game_over.rb'
+require 'display_board.rb'
+require 'place_piece.rb'
+
+game = {
+         board:  [
+                   [1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9]
+                 ],
+
+#  Assigned by PlayOrder.assign_pieces below
+#          player: {
+#                    piece: "X",
+#                    pieces_left: 5
+#                  },
+# 
+#          bot:    {
+#                    piece: "O",
+#                    pieces_left: 4
+#                  },
+
+         turn: nil,
+         winner: nil
+       }
+
+PlayOrder.assign_pieces(game)
+p game
+
+loop do
+  term_width = DisplayBoard.get_term_width
+  DisplayBoard.display_board(game[:board], term_width)
+
+  if GameOver.player_won?(game)
+    p 'player won!'
+    break
+  elsif GameOver.bot_won?(game)
+    p 'bot won!'
+    break
+  elsif GameOver.game_tie?(game)
+    p 'Tie!'
+    break
+  else 
+    spot_indexes = PlacePiece.get_valid_player_choice(game[:board])
+
+    PlacePiece.place_piece(game[:board], spot_indexes, game[:player][:piece])
   end
-
-  #while line =~ /[^m][1-9]/
-  #  line.gsub!(/([1-9])/, $1.colorize(:light_white))
-  #end
-  
 end
-
-def display_board(board_arr)
-
-  # example board_arr
-  # board_arr = [
-  #               [1, 2, 3]
-  #               [4, 5, 6]
-  #               [7, 8, 9]
-  #             ]
-  
-  term_width = begin
-                 `tput cols`.chomp.to_i
-               rescue
-                 # Unable to retrieve terminal width
-                 false
-               end
-
-  board_arr.each_with_index do |position, line_number|
-
-    filled_line = " #{position[0]} | #{position[1]} | #{position[2]} "
-    break_line = "-----------"
-
-    if term_width
-      centered_line = filled_line.center(term_width)
-      puts color_positions(centered_line)
-      puts break_line.center(term_width) if line_number < 2
-    else
-      puts filled_line
-      puts break_line if line_number < 2
-    end
-  end
-end
-
-display_board([['X', 2, 3], [3, 5, 'O'], [7, 8, 9]])
