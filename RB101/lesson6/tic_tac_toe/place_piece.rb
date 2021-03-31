@@ -23,14 +23,7 @@ module PlacePiece
       end
     end
 
-    spot_indexes
-  end
-
-  def self.place_piece(board_arr, spot_indexes, piece_to_place)
-    row = spot_indexes[0]
-    col = spot_indexes[1]
-
-    board_arr[row][col] = piece_to_place
+    spot_indexes # returns [nil, nil] if spot already taken
   end
 
   def self.get_valid_player_choice(board_arr)
@@ -57,6 +50,17 @@ module PlacePiece
     end
 
     spot_indexes
+  end
+
+  def self.place_piece(game, spot_indexes)
+    row = spot_indexes[0]
+    col = spot_indexes[1]
+
+    whose_turn = game[:turn]
+    piece_to_place = game[whose_turn][:piece]
+
+    game[:board][row][col] = piece_to_place
+    game[whose_turn][:pieces_left] -= 1
   end
 
 end

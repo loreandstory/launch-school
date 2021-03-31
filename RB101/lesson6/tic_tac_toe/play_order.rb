@@ -22,10 +22,22 @@ module PlayOrder
                    piece: bot_pieces,
                    pieces_left: pieces[bot_pieces]
                  }
+
+    if game[:player][:piece] == 'X'
+      game[:turn] = :player
+    else
+      game[:turn] = :bot
+    end
+
+    nil
   end
 
-  def self.assign_current_player(game)
-    
+  def self.toggle_turn(game)
+    if game[:turn] == :player
+      game[:turn] = :bot
+    else
+      game[:turn] = :player
+    end
   end
 
 end

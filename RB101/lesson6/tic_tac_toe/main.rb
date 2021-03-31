@@ -4,6 +4,7 @@ require 'play_order.rb'
 require 'game_over.rb'
 require 'display_board.rb'
 require 'place_piece.rb'
+require 'bot_play.rb'
 
 game = {
          board:  [
@@ -28,11 +29,11 @@ game = {
        }
 
 PlayOrder.assign_pieces(game)
-p game
 
 loop do
   term_width = DisplayBoard.get_term_width
   DisplayBoard.display_board(game[:board], term_width)
+  p game
 
   if GameOver.player_won?(game)
     p 'player won!'
@@ -44,8 +45,13 @@ loop do
     p 'Tie!'
     break
   else 
-    spot_indexes = PlacePiece.get_valid_player_choice(game[:board])
-
-    PlacePiece.place_piece(game[:board], spot_indexes, game[:player][:piece])
+    if game[:turn] == :player
+      spot_indexes = PlacePiece.get_valid_player_choice(game[:board])
+      PlacePiece.place_piece(game, spot_indexes)
+    else
+      BotPlay.bot_play(game)
+    end
   end
+
+  PlayOrder.toggle_turn(game)
 end
