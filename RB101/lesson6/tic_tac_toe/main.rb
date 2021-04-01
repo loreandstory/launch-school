@@ -2,7 +2,7 @@ $LOAD_PATH << '.'
 
 require 'play_order.rb'
 require 'game_over.rb'
-require 'display_board.rb'
+require 'display_game.rb'
 require 'place_piece.rb'
 require 'bot_play.rb'
 
@@ -31,8 +31,7 @@ game = {
 PlayOrder.assign_pieces(game)
 
 loop do
-  term_width = DisplayBoard.get_term_width
-  DisplayBoard.display_board(game[:board], term_width)
+  DisplayGame.display_game(game)
   p game
 
   if GameOver.player_won?(game)
