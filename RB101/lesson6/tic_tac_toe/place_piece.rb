@@ -1,5 +1,7 @@
 module PlacePiece
 
+  require 'colorize'
+
 #          board:  [
 #                    ['X', 2, 'O'],
 #                    ['O', 'X', 'O'],
@@ -26,11 +28,14 @@ module PlacePiece
     spot_indexes # returns [nil, nil] if spot already taken
   end
 
-  def self.get_valid_player_choice(board_arr)
+  def self.get_valid_player_choice(game)
+    board_arr = game[:board]
     spot_indexes = [nil, nil]
 
     loop do
-      print "=> Enter your choice: "
+      player = game[:turn]
+      call_player = (player.to_s + "!").colorize(game[player][:color])
+      print "=> #{call_player} Enter your choice: "
       player_choice = gets.chomp
 
       if valid_spot?(player_choice)

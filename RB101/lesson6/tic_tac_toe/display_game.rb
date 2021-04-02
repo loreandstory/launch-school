@@ -11,95 +11,100 @@ module DisplayGame
     end
   end
 
-  def self.colorize_board_line(line)
-    line.chars.map do |char|
-      if char == 'X'
-        char.colorize(:red)
-      elsif char == 'O'
-        char.colorize(:blue)
-      elsif char =~ /[1-9]/
-        char.colorize(:light_white)
-      else
-        char
-      end
-    end.join('')
-  end
-
-  def self.colorize_line(line, to_color_regex, color)
-    line.gsub(to_color_regex, '\1'.colorize(color))
-  end
-
-
-  def self.center_and_colorize_line(line, to_color_regex, color)
+  def self.center_line(line)
     term_width = get_term_width
-    centered_line = line.center(term_width)
-    centered_line.gsub(to_color_regex, '\1'.colorize(color))
+    line.center(term_width)
   end
 
-  def self.display_board(board_arr, term_width)
 
-    # example board_arr
-    # board_arr = [
-    #               [1, 2, 3]
-    #               [4, 5, 6]
-    #               [7, 8, 9]
-    #             ]
+  def self.color_line(line, to_color_regex, color_sym)
+    line.gsub(to_color_regex) do |match|
+      match.colorize(color_sym)
+    end
+  end
 
-    board_arr.each_with_index do |spot, line_number|
+  def self.prepare_line(game, line)
+
+    color_hsh = {
+      /\d/ => :light_white,
+      /player/ => game[:player][:color],
+      /bot/ => game[:bot][:color],
+      /Tic/ => :red,
+      /Tac/ => :blue,
+      /Toe/ => :light_white,
+      /X/ => :red,
+      /O/ => :blue,
+    }
+
+    cline = center_line(line)
+
+    colorized_line = cline
+    color_hsh.each do |regex, color|
+      # puts "#{colorized_line}:  #{regex}  #{color}  : #{color_line(colorized_line, regex, color)}"
+      colorized_line = color_line(colorized_line, regex, color)
+    end
+
+    colorized_line
+  end
+
+  def self.display_board(game)
+
+    # example game board
+    # game[:board] = [
+    #                  [1, 2, 3]
+    #                  [4, 5, 6]
+    #                  [7, 8, 9]
+    #                ]
+
+    game[:board].each_with_index do |spot, line_number|
 
       filled_line = " #{spot[0]} | #{spot[1]} | #{spot[2]} "
       break_line = "-----------"
 
-      centered_line = filled_line.center(term_width)
-      line = colorize_board_line(centered_line)
+      line = prepare_line(game, filled_line)
 
-      break_line = break_line.center(term_width)
+      break_line = prepare_line(game, break_line)
 
       puts line
       puts break_line if line_number < 2
     end
   end
 
-  def self.display_title_line(color_tic, color_tac, color_toe, term_width)
-    title = "Tic Tac Toe"
-    centered_title = title.center(term_width)
-    color_title =
-      centered_title.gsub(
-        /(Tic).*(Tac).*(Toe)/, 
-        '\1'.colorize(color_tic) + ' ' + '\2'.colorize(color_tac) + ' ' + '\3'.colorize(color_toe)
-      )
+  def self.display_game(game)
+    sleep(1)
 
-    print "#{color_title}\n\n"
+    system('clear')
+
+    puts prepare_line(game, "Tic Tac Toe")
+    puts
+    display_board(game)
+    puts
+    puts prepare_line(game, "turn: #{game[:turn]}")
+    puts
+    puts prepare_line(game, "----------------------------------")
+    puts
+    puts prepare_line(game, "player              bot           ")
+    puts prepare_line(game, "piece: #{game[:player][:piece]}            piece: #{game[:bot][:piece]}     ")
+    puts prepare_line(game, "piece left: #{game[:player][:pieces_left]}       pieces left: #{game[:bot][:pieces_left]}")
+    puts
+
   end
 
-  def self.display_game(game)
-    term_width = get_term_width
+  def self.display_game_result(game)
+    result = if game[:winner] != 'tie'
+               ' won!'
+             else
+               '!'
+             end
 
-    display_title_line(:red, :blue, :light_white, term_width)
-    display_board(game[:board], term_width)
+    longest_return = "player won!".length
+    result_declaration = game[:winner] + result
+    
     puts
-    break_line = "---------------------"
-    puts break_line.center(term_width)
+    puts prepare_line(game, "##################################")
+    puts prepare_line(game, "##          #{result_declaration.center(longest_return)}         ##")
+    puts prepare_line(game, "##################################")
     puts
-    if game[:turn] == :player
-      player_line = "player's turn"
-      centered_player_line player_line.center(term_width)
-      if game[:player][:piece] == 'X'
-        puts player_line.replace("player", "player".colorize(:red)
-      elsif game[:player][:piece] == 'O'
-        puts player_line.replace("player", "player".colorize(:blue)
-      end
-    else
-      player_line = "bot's turn"
-      centered_player_line player_line.center(term_width)
-      if game[:bot][:piece] == 'X'
-        puts player_line.replace("bot", "bot".colorize(:red)
-      elsif game[:bot][:piece] == 'O'
-        puts player_line.replace("bot", "bot".colorize(:blue)
-      end
-    end
-
-      sleep(2)
   end
 
 end

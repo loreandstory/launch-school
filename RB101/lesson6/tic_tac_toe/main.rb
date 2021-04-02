@@ -16,12 +16,14 @@ game = {
 #  Assigned by PlayOrder.assign_pieces below
 #          player: {
 #                    piece: "X",
-#                    pieces_left: 5
+#                    pieces_left: 5,
+#                    color: :blue,
 #                  },
 # 
 #          bot:    {
 #                    piece: "O",
-#                    pieces_left: 4
+#                    pieces_left: 4,
+#                    color: :blue,
 #                  },
 
          turn: nil,
@@ -32,25 +34,28 @@ PlayOrder.assign_pieces(game)
 
 loop do
   DisplayGame.display_game(game)
-  p game
 
   if GameOver.player_won?(game)
-    p 'player won!'
+    game[:winner] = 'player'
     break
   elsif GameOver.bot_won?(game)
-    p 'bot won!'
+    game[:winner] = 'bot'
     break
   elsif GameOver.game_tie?(game)
-    p 'Tie!'
+    game[:winner] = 'tie'
     break
   else 
+
     if game[:turn] == :player
-      spot_indexes = PlacePiece.get_valid_player_choice(game[:board])
+      spot_indexes = PlacePiece.get_valid_player_choice(game)
       PlacePiece.place_piece(game, spot_indexes)
     else
       BotPlay.bot_play(game)
     end
+
   end
 
   PlayOrder.toggle_turn(game)
 end
+
+DisplayGame.display_game_result(game)

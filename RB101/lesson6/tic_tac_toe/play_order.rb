@@ -3,24 +3,26 @@ module PlayOrder
   def self.assign_pieces(game)
     pieces = {
       # piece => number of pieces
-      'X' => 5,
-      'O' => 4,
+      'X' => [5, :red],
+      'O' => [4, :blue],
     }
 
     possible_pieces = pieces.keys
-    player_pieces = possible_pieces.sample
+    player_piece = possible_pieces.sample
 
-    possible_pieces.delete(player_pieces)
-    bot_pieces = possible_pieces[0]
+    possible_pieces.delete(player_piece)
+    bot_piece = possible_pieces[0]
 
     game[:player] = {
-                      piece: player_pieces,
-                      pieces_left: pieces[player_pieces]
+                      piece: player_piece,
+                      pieces_left: pieces[player_piece][0],
+                      color: pieces[player_piece][1],
                     }
 
     game[:bot] = {
-                   piece: bot_pieces,
-                   pieces_left: pieces[bot_pieces]
+                   piece: bot_piece,
+                   pieces_left: pieces[bot_piece][0],
+                   color: pieces[bot_piece][1],
                  }
 
     if game[:player][:piece] == 'X'

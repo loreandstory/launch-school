@@ -5,6 +5,7 @@ module BotPlay
   require 'game_over.rb'
   require 'place_piece.rb'
   require 'pry'
+  require 'colorize'
 
   def self.board_empty?(board_arr)
     flattened_array = board_arr.flatten
@@ -16,7 +17,10 @@ module BotPlay
 
   def self.board_empty_randomly_place_piece(game)
     spot_to_play = [rand(0..2), rand(0..2)]
+    spot_picked = game[:board][spot_to_play[0]][spot_to_play[1]]
+
     PlacePiece.place_piece(game, spot_to_play)
+    spot_picked
   end
 
   def self.find_empty_spot_values(board_arr)
@@ -37,7 +41,10 @@ module BotPlay
     empty_spot_value = find_empty_spot_values(game[:board])[0]
     final_spot_index = PlacePiece.find_spot_index(game[:board], empty_spot_value)
 
+    spot_picked = game[:board][final_spot_index[0]][final_spot_index[1]]
+
     PlacePiece.place_piece(game, final_spot_index)
+    spot_picked
   end
 
   def self.duplicate_game(game)
@@ -99,7 +106,11 @@ module BotPlay
     randomly_chosen_val = empty_spots_values.sample
 
     chosen_index = PlacePiece.find_spot_index(game[:board], randomly_chosen_val)
+
+    spot_picked = game[:board][chosen_index[0]][chosen_index[1]]
+
     PlacePiece.place_piece(game, chosen_index)
+    spot_picked
   end
 
   def self.bot_ai_place_piece(game)
@@ -107,9 +118,15 @@ module BotPlay
     avoid_losing_indexes = avoid_losing_returnindexes(game)
 
     if will_win_indexes[0] != nil && will_win_indexes[1] != nil
+      spot_picked = game[:board][will_win_indexes[0]][will_win_indexes[1]]
       PlacePiece.place_piece(game, will_win_indexes)
+      spot_picked
+
     elsif avoid_losing_indexes[0] != nil && avoid_losing_indexes[1] != nil
+      spot_picked = game[:board][avoid_losing_indexes[0]][avoid_losing_indexes[1]]
       PlacePiece.place_piece(game, avoid_losing_indexes)
+      spot_picked
+
     else
       randomly_place_piece(game)
     end
@@ -117,14 +134,18 @@ module BotPlay
 
   def self.bot_play(game)
     test_board = game[:board].dup
+    bot = game[:turn]
+    bot_color = game[bot][:color]
 
-    if board_empty?(game)
-      board_empty_randomly_place_piece(game)
-    elsif one_spot_left?(game[:board])
-      place_piece_final_spot(game)
-    else
-      bot_ai_place_piece(game)
-    end
+    bot_played_at = if board_empty?(game)
+                      board_empty_randomly_place_piece(game)
+                    elsif one_spot_left?(game[:board])
+                      place_piece_final_spot(game)
+                    else
+                      bot_ai_place_piece(game)
+                    end
+
+    puts "=> #{bot.to_s.colorize(bot_color)} chose: #{bot_played_at}"
   end
 
 end
