@@ -75,6 +75,7 @@ module DisplayGame
 
     system('clear')
 
+    print "\n\n\n\n"
     puts prepare_line(game, "Tic Tac Toe")
     puts
     display_board(game)
@@ -86,6 +87,8 @@ module DisplayGame
     puts prepare_line(game, "player              bot           ")
     puts prepare_line(game, "piece: #{game[:player][:piece]}            piece: #{game[:bot][:piece]}     ")
     puts prepare_line(game, "piece left: #{game[:player][:pieces_left]}       pieces left: #{game[:bot][:pieces_left]}")
+    puts prepare_line(game, "wins: #{game[:player][:wins]}             wins: #{game[:bot][:wins]}      ")
+    puts prepare_line(game, "ties: #{game[:ties]}                           ")
     puts
 
   end
@@ -105,6 +108,30 @@ module DisplayGame
     puts prepare_line(game, "##          #{result_declaration.center(longest_return)}         ##")
     puts prepare_line(game, "##################################")
     puts
+  end
+
+  def self.continue?
+    yes = ['y', 'Y', 'yes', 'continue']
+    no = ['n', 'N', 'no', 'quit', 'exit']
+
+    continue = false
+
+    loop do
+      print "=> Play another round? (y/n): "
+      user_input = gets.chomp
+
+      if yes.include?(user_input)
+        continue = true
+        break
+      elsif no.include?(user_input)
+        continue = false
+        break
+      else
+        print "Not a valid input. Please try again...\n\n"
+      end
+    end
+
+    continue
   end
 
 end
