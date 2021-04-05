@@ -1,9 +1,9 @@
+# rubocop:disable  Metrics/ModuleLength
 module BotPlay
-
   $LOAD_PATH << '.'
 
-  require 'game_over.rb'
-  require 'place_piece.rb'
+  require 'game_over'
+  require 'place_piece'
   require 'pry'
   require 'colorize'
 
@@ -27,7 +27,7 @@ module BotPlay
     flattened_array = board_arr.flatten
 
     flattened_array.select do |spot|
-      spot.class == Integer
+      spot.instance_of?(Integer)
     end
   end
 
@@ -39,7 +39,8 @@ module BotPlay
 
   def self.place_piece_final_spot(game)
     empty_spot_value = find_empty_spot_values(game[:board])[0]
-    final_spot_index = PlacePiece.find_spot_index(game[:board], empty_spot_value)
+    final_spot_index = PlacePiece.find_spot_index(game[:board],
+                                                  empty_spot_value)
 
     spot_picked = game[:board][final_spot_index[0]][final_spot_index[1]]
 
@@ -52,9 +53,9 @@ module BotPlay
     game[:board].each do |row|
       dup_board << row.dup
     end
-    
+
     {
-      board: dup_board, 
+      board: dup_board,
       player: game[:player].dup,
       bot: game[:bot].dup,
       turn: game[:turn],
@@ -113,17 +114,18 @@ module BotPlay
     spot_picked
   end
 
+  # rubocop:disable  Metrics/AbcSize
   def self.bot_ai_place_piece(game)
     will_win_indexes = play_to_win_returnindexes(game)
     avoid_losing_indexes = avoid_losing_returnindexes(game)
 
-    if will_win_indexes[0] != nil && will_win_indexes[1] != nil
-      spot_picked = game[:board][will_win_indexes[0]][will_win_indexes[1]]
+    if !will_win_indexes[0].nil? && !will_win_indexes[1].nil?
+      spot_picked = game[:board][*will_win_indexes]
       PlacePiece.place_piece(game, will_win_indexes)
       spot_picked
 
-    elsif avoid_losing_indexes[0] != nil && avoid_losing_indexes[1] != nil
-      spot_picked = game[:board][avoid_losing_indexes[0]][avoid_losing_indexes[1]]
+    elsif !avoid_losing_indexes[0].nil? && !avoid_losing_indexes[1].nil?
+      spot_picked = game[:board][*avoid_losing_indexes]
       PlacePiece.place_piece(game, avoid_losing_indexes)
       spot_picked
 
@@ -131,9 +133,9 @@ module BotPlay
       randomly_place_piece(game)
     end
   end
+  # rubocop:enable  Metrics/AbcSize
 
   def self.bot_play(game)
-    test_board = game[:board].dup
     bot = game[:turn]
     bot_color = game[bot][:color]
 
@@ -147,5 +149,5 @@ module BotPlay
 
     puts "=> #{bot.to_s.colorize(bot_color)} chose: #{bot_played_at}"
   end
-
 end
+# rubocop:enable  Metrics/ModuleLength

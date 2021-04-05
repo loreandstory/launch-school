@@ -1,10 +1,10 @@
 module PlayOrder
-
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def self.assign_pieces(game)
     pieces = {
       # piece => number of pieces
       'X' => [5, :red],
-      'O' => [4, :blue],
+      'O' => [4, :blue]
     }
 
     possible_pieces = pieces.keys
@@ -21,14 +21,15 @@ module PlayOrder
     game[:bot][:pieces_left] = pieces[bot_piece][0]
     game[:bot][:color] = pieces[bot_piece][1]
 
-    if game[:player][:piece] == 'X'
-      game[:turn] = :player
-    else
-      game[:turn] = :bot
-    end
+    game[:turn] = if game[:player][:piece] == 'X'
+                    :player
+                  else
+                    :bot
+                  end
 
     nil
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def self.initialize_play(game)
     game[:board] = [
@@ -41,11 +42,10 @@ module PlayOrder
   end
 
   def self.toggle_turn(game)
-    if game[:turn] == :player
-      game[:turn] = :bot
-    else
-      game[:turn] = :player
-    end
+    game[:turn] = if game[:turn] == :player
+                    :bot
+                  else
+                    :player
+                  end
   end
-
 end

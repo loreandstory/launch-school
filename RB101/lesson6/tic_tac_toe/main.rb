@@ -1,37 +1,36 @@
 $LOAD_PATH << '.'
 
-require 'play_order.rb'
-require 'game_over.rb'
-require 'display_game.rb'
-require 'place_piece.rb'
-require 'bot_play.rb'
+require 'play_order'
+require 'game_over'
+require 'display_game'
+require 'place_piece'
+require 'bot_play'
 
 game = {
-         board:  [
-                   [1, 2, 3],
-                   [4, 5, 6],
-                   [7, 8, 9]
-                 ],
+  board: [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+  ],
 
-#  Pieces, colors, etc. assigned by PlayOrder.assign_pieces below
-         player: {
-#                  piece: "X",
-#                  pieces_left: 5,
-#                  color: :blue,
-                   wins: 0,
-                 },
-# 
-         bot:    {
-#                  piece: "O",
-#                  pieces_left: 4,
-#                  color: :blue,
-                   wins: 0,
-                 },
+  #  Pieces, colors, etc. assigned by PlayOrder.assign_pieces below
+  player: {
+    #                  piece: "X",
+    #                  pieces_left: 5,
+    #                  color: :blue,
+    wins: 0
+  },
+  bot: {
+    #                  piece: "O",
+    #                  pieces_left: 4,
+    #                  color: :blue,
+    wins: 0
+  },
 
-         turn: nil,
-         winner: nil,
-         ties: 0,
-       }
+  turn: nil,
+  winner: nil,
+  ties: 0
+}
 
 loop do
   PlayOrder.initialize_play(game)
@@ -51,14 +50,12 @@ loop do
       game[:winner] = 'tie'
       game[:ties] += 1
       break
-    else 
+    elsif game[:turn] == :player
 
-      if game[:turn] == :player
-        spot_indexes = PlacePiece.get_valid_player_choice(game)
-        PlacePiece.place_piece(game, spot_indexes)
-      else
-        BotPlay.bot_play(game)
-      end
+      spot_indexes = PlacePiece.get_valid_player_choice(game)
+      PlacePiece.place_piece(game, spot_indexes)
+    else
+      BotPlay.bot_play(game)
 
     end
 
