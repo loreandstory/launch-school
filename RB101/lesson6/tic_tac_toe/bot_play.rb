@@ -120,12 +120,15 @@ module BotPlay
     avoid_losing_indexes = avoid_losing_returnindexes(game)
 
     if !will_win_indexes[0].nil? && !will_win_indexes[1].nil?
-      spot_picked = game[:board][*will_win_indexes]
+      spot_picked = game[:board][will_win_indexes[0]][will_win_indexes[1]]
       PlacePiece.place_piece(game, will_win_indexes)
       spot_picked
 
     elsif !avoid_losing_indexes[0].nil? && !avoid_losing_indexes[1].nil?
-      spot_picked = game[:board][*avoid_losing_indexes]
+      # rubocop:disable Layout/LineLength
+      spot_picked = game[:board][avoid_losing_indexes[0]][avoid_losing_indexes[1]]
+      # rubocop:enable Layout/LineLength
+
       PlacePiece.place_piece(game, avoid_losing_indexes)
       spot_picked
 
