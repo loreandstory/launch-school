@@ -1,6 +1,4 @@
 module HandleCards
-  BUST = 21
-
   def self.make_and_shuffle_deck
     face_cards = ['A', 'K', 'Q', 'J']
     numbered_cards = ('2'..'10').to_a
@@ -37,6 +35,14 @@ module HandleCards
 
   def self.sort_hand(hand)
     hand.sort do |card1, card2|
+      if card1.match(/m([A,K,Q,J,0-9]+)/)
+        card1 = card1.match(/m([A,K,Q,J,0-9]+)/)[1]
+      end
+
+      if card2.match(/m([A,K,Q,J,0-9]+)/)
+        card2 = card2.match(/m([A,K,Q,J,0-9]+)/)[1]
+      end
+
       card1_order_val = find_card_order_value(card1)
       card2_order_val = find_card_order_value(card2)
 
@@ -55,14 +61,14 @@ module HandleCards
   end
 
   def self.sum_hand_value(hand)
-    # Hand input must be hand sorted by sort_hand above.
-    hand.reduce(0) do |sum, card|
+    sorted_hand = sort_hand(hand)
+
+    sorted_hand.reduce(0) do |sum, card|
       card_value = if face_card?(card)
                      decide_face_card_value(card, sum)
                    else
                      number_card_to_value(card)
                    end
-      puts "card value is: #{card_value}"
 
       sum + card_value
     end
