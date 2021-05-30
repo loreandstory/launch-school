@@ -8,7 +8,7 @@ class Pet
   end
 end
 
-class Dog
+class Dog < Pet
   def speak
     'bark!'
   end
@@ -28,17 +28,9 @@ class Bulldog < Dog
   end
 end
 
-class Cat < Dog
-  def swim
-    "cats don't swim!"
-  end
-
+class Cat < Pet
   def speak
     'meow!'
-  end
-
-  def fetch
-    "what, do you think I'm a dog?"
   end
 end
 
@@ -51,6 +43,4 @@ puts snouty.speak
 puts snouty.swim
 
 tater = Cat.new
-puts tater.swim
 puts tater.speak
-puts tater.fetch

@@ -4,6 +4,14 @@ class Person
     @last_name = last_name.capitalize
   end
 
+  def first_name=(fn)
+    @first_name = fn.capitalize
+  end
+
+  def last_name=(ln)
+    @last_name = ln.capitalize
+  end
+
   def to_s
     "#{@first_name} #{@last_name}"
   end

@@ -8,3 +8,12 @@ class Rectangle
     @height * @width
   end
 end
+
+class Square < Rectangle
+  def initialize(dimension)
+    super(dimension, dimension)
+  end
+end
+
+square = Square.new(5)
+puts "area of square = #{square.area}"
