@@ -123,7 +123,7 @@ class RPSGame
   def continue_or_display_goodbye_message
     continue = nil
     loop do
-      prompt("--------- Would you like to play again (Y/n)? ")
+      prompt("--------- Would you like to play again (y/n)? ")
       continue = gets.chomp
       break if continue.match?(/^y(es)?|n(o)?$/i)
       puts "------- ? I'm sorry, I couldn't understand your input. Could you please try again?"
@@ -144,4 +144,19 @@ class RPSGame
   end
 end
 
-RPSGame.new('rps').play
+
+option = nil
+system('clear')
+
+while option == nil
+  print "\nWhat would you like to play?\n  1) Rock Paper Scissors\n  2) Lizard Spock"
+  print "\n\n=> Enter number for option: "
+
+  option = case gets.chomp
+           when '1' then 'rps'
+           when '2' then 'ls'
+           else          puts("Input not valid. Please enter 1 or 2 to play.")
+           end
+end
+
+RPSGame.new(option).play
