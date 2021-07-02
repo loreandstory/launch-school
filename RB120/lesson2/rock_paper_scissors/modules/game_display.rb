@@ -1,22 +1,27 @@
 module GameDisplay
-  def title
+  def new_page
     system('clear')
     puts "| #{name} |"
   end
 
+  def header(text)
+    print "\n" + text + "\n"
+  end
+
   def display_welcome
-    title
-    print "\nWelcome to Rock Paper Scissors!\n"
+    new_page
+    header("Welcome to Rock Paper Scissors!")
   end
 
   def display_game_choosen
-    title
-    print "\nYou chose #{name}\n"
+    new_page
+    header("You chose #{name}")
   end
 
-  def display_game
-    title
-    print "\nChoose your moves\n"
+  def display_players
+    new_page
+    header("Welcome #{player}!")
+    puts "You are playing against: #{computer}"
   end
 
   def display_moves

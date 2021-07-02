@@ -11,5 +11,5 @@ module Rules
                'spock'    => ['scissors', 'rock']
              }.freeze
 
-  RULES = { 'rps' => RPS_RULES, 'ls' => LS_RULES }
+  RULES = { 'rps' => RPS_RULES, 'ls' => LS_RULES }.freeze
 end

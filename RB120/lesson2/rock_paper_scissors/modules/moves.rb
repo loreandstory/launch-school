@@ -8,6 +8,10 @@ class Moves
   def <(other)
     Game::RULES[Game.game][other.move].include? self.move
   end
+
+  def to_s
+    move
+  end
 end
 
 class Rock < Moves
