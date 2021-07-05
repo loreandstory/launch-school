@@ -1,45 +1,78 @@
 $LOAD_PATH << 'modules/'
 
 require 'interface_with_user'
-require 'game_display'
+require 'display'
 require 'players'
+require 'Rules'
 
 class Game
-  attr_reader :wins, :loses, :ties, :name, :code, :player, :computer, :winner
+  attr_reader :name, :code, :player, :computer, :winner, :score, :history
 
   def initialize
-    self.wins = 0
-    self.loses = 0
-    self.ties = 0
-    self.name = 'Rock Paper Scissor'
+    p LS
+    self.score =   Score.new
+    self.history = History.new
+    self.name =   'Rock Paper Scissor'
 
-    display_welcome
+    Display::welcome(name)
     choose_game
 
-    display_game_choosen
+    Display::game_choosen(name)
     @player = Human.new
   end
 
   def play
     self.computer = Computer.new
-    display_players
+    Display::players(name, player, computer)
 
     player.move(code)
     computer.move(code)
-    display_moves
+    Display::moves(name, player, computer)
 
     self.winner = determine_winner
-    update_score
 
-    display_score
+    Display::score(score)
+    # Display::history if see_history?
+
     play if continue?
   end
 
   private
-  attr_writer :wins, :loses, :ties, :name, :code, :computer, :winner
+  attr_writer :name, :code, :computer, :winner, :score, :history
+
+  class Score
+    def initialize
+      @wins = 0
+      @loses = 0
+      @ties = 0
+    end
+
+    def update
+      if winner == Game.player.name
+        wins += 1
+      elsif winner == Game.computer.name
+        loses += 1
+      else
+        ties += 1
+      end
+    end
+
+    private
+    attr_accessor :wins, :loses, :ties
+  end
+
+  class History
+    def initialize
+      @winners = []
+      @players = []
+      @computer = []
+    end
+
+    private
+    attr_accessor :winners, :player, :computer
+  end
 
   include InterfaceWithUser
-  include GameDisplay
 
   def choose_game
     print "\n" + (<<~CHOOSE_GAME)
@@ -55,12 +88,20 @@ class Game
   end
 
   def determine_winner
-  end
-
-  def update_score
+    if player.choice > computer.choice
+      player.name
+    elsif player.choice < computer.choice
+      computer.name
+    else
+      'tie'
+    end
   end
 
   def continue?
+    p Players.history
+    puts 'please input...'
+    gets.chomp
+    true
   end
 end
 

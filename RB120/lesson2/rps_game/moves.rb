@@ -1,12 +1,20 @@
 class Moves
   attr_reader :move
 
+  RULES = {
+            'rock'     => ['scissors', 'lizard'],
+            'paper'    => ['rock', 'spock'],
+            'scissors' => ['paper', 'lizard'],
+            'lizard'   => ['paper', 'spock'],
+            'spock'    => ['scissors', 'rock']
+          }.freeze
+
   def >(other)
-    Rules::LS[self.move].include? other.move
+    RULES[self.move].include? other.move
   end
 
   def <(other)
-    Rules::LS[other.move].include? self.move
+    RULES[other.move].include? self.move
   end
 
   def to_s

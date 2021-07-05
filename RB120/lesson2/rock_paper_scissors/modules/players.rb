@@ -8,8 +8,6 @@ require 'bots'
 class Players
   attr_reader :name, :choice
 
-  include Rules
-
   POSSIBLE_MOVES = {
                      'rock'     => Rock.new,
                      'paper'    => Paper.new,
@@ -17,8 +15,6 @@ class Players
                      'lizard'   => Lizard.new,
                      'spock'    => Spock.new
                    }
-
-  @@history = { human: [], computer: [] }
 
   def to_s
     name
@@ -32,11 +28,12 @@ end
 
 class Human < Players
   def initialize
+    p Game.name
     @name = fetch_player_name
   end
 
   def move(game_code)
-    possible_moves = RULES[game_code].keys
+    possible_moves = Rules::ACCESSOR[game_code].keys
 
     print "\nYou can make the following moves:\n"
     print "\n   |Input|\n"
@@ -44,13 +41,12 @@ class Human < Players
 
     player_move = fetch_input("Choose your move", possible_moves)
     self.choice = POSSIBLE_MOVES[player_move]
-
-    @@history[:human] << player_move
   end
 end
 
 class Computer < Players
   BOTS = {
+           'Bot'   => Bot.new,
            'Walle' => Walle.new,
            'R2D2'  => R2D2.new,
            'C3PO'  => C3PO.new,
@@ -60,21 +56,16 @@ class Computer < Players
          }
 
   def initialize
-    self.name = BOTS.keys.sample
-    self.personality = BOTS[name]
+    @name = BOTS.keys.sample
+    @personality = BOTS[name]
   end
 
   def move(game_code)
-    possible_moves = RULES[game_code].keys
+    possible_moves = Rules::ACCESSOR[game_code].keys
 
     computer_move = personality.choose(game_code, possible_moves)
     self.choice = POSSIBLE_MOVES[computer_move]
-
-    puts choice
-    @@history[:computer] << [name, choice]
   end
 
-  private
-  attr_writer :name
-  attr_accessor :personality
+  attr_reader :personality
 end
