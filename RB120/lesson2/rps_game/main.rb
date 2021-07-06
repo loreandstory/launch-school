@@ -4,22 +4,45 @@ require 'moves'
 require 'players'
 require 'game'
 
-BOTS = [
-         Computer.new,
-=begin Walle.new, R2D2.new, C3PO.new,
-         BB8.new,      Hal.new,   Sonny.new
+=begin
+  Functionality fully inplemented, but need to flesh out display module
+  to get displaying nicely and in a way the user will find engaging.
+
+  Below is a temporary, basic, and crude implementation of a
+  working Rock Paper Scissors/Lizard Spock game for a user to play.
 =end
+
+BOTS = [
+         Computer.new, Walle.new, R2D2.new, C3PO.new,
+         BB8.new,      Hal.new,   Sonny.new
        ].freeze
 
-game = Game.new
+def play(player, game)
+  system('clear')
+  computer = BOTS.sample
+  print "\n#{player.name}, you are playing against: #{computer.name}\n\n"
+
+  print "Choose your move...\n\n"
+  player.choose_move(game.type)
+  computer.choose_move(game.type)
+
+  print "\nYou chose: #{player.move}"
+  puts "\n#{computer.name} chose: #{computer.move}\n"
+  game.update(player, computer)
+
+  print "\nThe winner is ==> #{game.winner}!\n\n"
+  game.print_score
+
+  print "\n\nKeep playing? (y/n): "
+  return unless ['Y', 'y', 'yes'].include? gets.chomp
+  play(player, game)
+end
+
+system('clear')
 player = Human.new
-computer = BOTS.sample
+game = Game.new
 
-player.choose_move(game.type)
-computer.choose_move(game.type)
-game.update(player, computer)
-
-p game.score
-p game.history
-p game.winner
-game.print_score
+play(player, game)
+puts
+game.tally_stats
+p game.stats

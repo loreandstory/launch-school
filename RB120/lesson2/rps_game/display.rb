@@ -1,1 +1,2 @@
-Display = 'test'
+class Display
+end
